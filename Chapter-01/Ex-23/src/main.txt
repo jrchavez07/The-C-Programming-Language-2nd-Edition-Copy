@@ -1,0 +1,73 @@
+/*-
+ *	Exercise 1-23. Write a program to remove all comments from a C program.
+ *	Don't forget to handle quoted strings and character constants properly. C com-
+ *	ents do not nest.
+ *
+ *	Jose Chavez
+ */
+#include <stdio.h>
+
+#define BUFSIZE		1024
+
+char buf[BUFSIZE];
+
+int get_line(void);
+
+int
+main(void)
+{
+	extern char buf[];
+	int in_comm, in_quote;
+	int len, indx;
+
+	in_comm = in_quote = 0;
+	indx = 0;
+	while ((len = get_line()) > 0) {
+		indx = 0;
+		while (indx < len) {			
+			if (buf[indx] == '"')
+				in_quote = 1;
+
+			if (!in_quote) {
+				if (buf[indx] == '*' && buf[indx+1] == '/') {
+					indx = indx + 2;
+					in_comm = 0;
+				}
+
+				if (buf[indx] == '/' && buf[indx+1] == '*') {
+					indx = indx + 2;
+					in_comm = 1;
+				}
+
+				if (in_comm == 1)
+					indx++;
+				else {
+					printf("%c", buf[indx]);
+					indx++;
+				}
+			} else {
+				printf("%c", buf[indx]);
+				indx++;
+			}
+		}
+	}
+
+	return 0;
+}
+
+
+int
+get_line(void)
+{
+	int ch, indx;
+	extern char buf[];
+
+	for (indx = 0; indx < BUFSIZE - 1 &&
+			(ch = getchar()) != EOF && ch != '\n'; indx++)
+		buf[indx] = ch;
+	if (ch == '\n')
+		buf[indx++] = ch;
+	buf[indx] = '\0';
+	return indx;
+}
+
