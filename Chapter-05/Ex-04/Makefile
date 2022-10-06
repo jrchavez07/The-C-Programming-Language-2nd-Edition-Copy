@@ -20,7 +20,7 @@ release: clean
 release: $(BIN)
 
 $(BIN): $(OBJ) $(OBJS) $(BINDER)
-	$(CC) $(CFLAGS) $(OBJS) -o $@ -lm
+	$(CC) $(CFLAGS) $(OBJS) -o $@ -lcriterion
 
 $(OBJ)/%.o: $(SRC)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@

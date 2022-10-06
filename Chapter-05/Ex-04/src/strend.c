@@ -6,27 +6,25 @@
  */
 #include <stdio.h>
 
-void test(void);
+#include <criterion/criterion.h>
 
 static int strend(char *s, char *t);
 
-int
-main(void)
-{
-	test();
-	return 0;
-}
+/*-
+ *	[	Possible Test Cases	]
+ *
+ *	strend("a", "");
+ *	strend("duck", "duck");
+ *	strend("Unsubtle", "subtle");
+ *	strend("frankly", "frank");
+ *	strend("aaaaaX", "aaaaX");
+ */
 
-
-void
-test(void)
+Test(strend, test_cases, .description = "test cases")
 {
-	printf("> %d\n", strend("a", ""));
-	printf("> %d\n", strend("duck", "duck"));
-	printf("> %d\n", strend("Unsubtle", "subtle"));
-	printf("> %d\n", strend("frankly", "frank"));
-	printf("> %d\n", strend("aaaaaX", "aaaaX"));
-	return;
+	int rval = strend("aaaaaX", "aaaaX");
+	const int expected = 1;
+	cr_expect(rval == expected);
 }
 
 
