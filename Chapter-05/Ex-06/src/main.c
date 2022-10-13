@@ -13,11 +13,21 @@
 #include <ctype.h>
 #include <stddef.h>
 
+#define	MAXOP	100	/* max size of operand or operator */
+#define NUMBER	'0'	/* signal that a number was found */
+#define BUFSIZE	100
+
+char buf[BUFSIZE];	/* buffer for ungetch */
+int bufp = 0;		/* next free position in buf */
+
 ssize_t jr_getline(char *lineptr, size_t n);
 int jr_atoi(const char *nptr);
 char *jr_itoa(int n, char *nptr);
 char *jr_strrev(char *s);
 int strindex(char *s, char *t);
+int getop(char *s);
+int getch(void);
+void ungetch(int);
 
 int
 main(void)
@@ -146,4 +156,31 @@ strindex(char *s, char *t)
 		s1++;
 	}
 	return -1;
+}
+
+
+/* getop: get next operator or numeric operand */
+int
+getop(char *s)
+{
+	return 0;
+}
+
+
+/* getch: get a (possibly pushed back) character */
+int
+getch(void)
+{
+	return (bufp > 0) ? buf[--bufp] : getchar();
+}
+
+
+/* ungetch: push character back on input */
+void
+ungetch(int c)
+{
+	if (bufp >= BUFSIZE)
+		printf("ungetch: too many characters\n");
+	else
+		buf[bufp++] = c;
 }
