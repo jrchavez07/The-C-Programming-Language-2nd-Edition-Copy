@@ -33,8 +33,10 @@ int
 main(void)
 {
 	int num;
+	int type;
 	char buf[BUFSIZ];
 	char itoa_buf[BUFSIZ];
+	char s[MAXOP];
 
 	printf(">>> please enter a number: ");
 	jr_getline(buf, BUFSIZ);
@@ -43,8 +45,8 @@ main(void)
 	printf("\n[ str: ] = %s[ int: ] = %d\n", buf, num);
 	printf("[ int: %d ], [ str: %s ]\n", INT_MIN, jr_itoa(INT_MIN, itoa_buf));
 
-	char s[100] = "abcdeDFabcde";
-	int ret = strindex(s, "abc");
+	char str[BUFSIZ] = "abcdeDFabcde";
+	int ret = strindex(str, "abc");
 	if (ret == -1) {
 		printf( "The substring (string 2) was not found in the "
 			"base string (string 1).\n");
@@ -52,10 +54,28 @@ main(void)
 		printf( "The substring was found in the base string, "
 			"starting at position %d.\n", ret);
 	}
+
+	while ((type = getop(s)) != EOF) {
+		switch (type) {
+		case NUMBER:
+			printf("found a number: %s\n", s);
+			break;
+		case '+':
+			printf("found \'+\'");
+			break;
+		case '\n':
+			printf("found line break.\n");
+			break;
+		default:
+			printf("found something else: %s\n", s);
+			break;
+		}
+	}
 	return 0;
 }
 
 
+/* getline: get line into s, return length */
 ssize_t
 jr_getline(char *lineptr, size_t n)
 {
@@ -72,6 +92,7 @@ jr_getline(char *lineptr, size_t n)
 }
 
 
+/* atoi: convert s to integer */
 int
 jr_atoi(const char *nptr)
 {
@@ -163,7 +184,23 @@ strindex(char *s, char *t)
 int
 getop(char *s)
 {
-	return 0;
+	int c;
+
+	while ((*s++ = c = getch()) == ' ' || c == '\t')
+		;
+	*s = '\0';
+	if (!isdigit(c) && c != '.')
+		return c;	/* not a number */
+	if (isdigit(c))	/* collect integer part */
+		while (isdigit(*s++ = c = getch()))
+			;
+	if (c == '.')	/* collect fraction part */
+		while (isdigit(*s++ = c = getch()))
+			;
+	*--s = '\0';
+	if (c != EOF)
+		ungetch(c);
+	return NUMBER;
 }
 
 
