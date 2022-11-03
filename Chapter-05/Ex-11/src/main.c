@@ -48,6 +48,13 @@ main(int argc, char *argv[])
 				} while (column & 07);
 				continue;
 			}
+			if (nstops == 1) {
+				do {
+					putwchar('-');
+					column++;
+				} while (((column - 1) % tabstops[0]) != (tabstops[0] - 1));
+				continue;
+			}
 			for (n = 0; n < nstops; n++)
 				if (tabstops[n] > column)
 					break;
